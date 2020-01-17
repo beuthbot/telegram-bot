@@ -3,6 +3,7 @@ const moment = require('moment')
 const telegrambot = require('node-telegram-bot-api')
 
 const commands = require('./commands')
+const gateway = require('./gateway_api')
 
 // # initialisation
 const token = '1008019346:AAHZ-PALIP0-TcCq5r90u3A5ekc1JvbdTy4'
@@ -17,7 +18,13 @@ app.use((req, res, next) => {
 // # direct messages
 bot.on('message', (message) => {
 	if (commands.isCommand(message)) commands.handleCommands(bot, message)
-	else bot.sendMessage(message.chat.id, 'Kia Ora!')
+	else {
+    // send message to gateway
+    const response = gateway.sendMessage(message)
+
+    // answer
+    bot.sendMessage(message.chat.id, 'Kia Ora!')
+  }
 })
 
 // # callback queries

@@ -10,6 +10,7 @@ async function post (collection, body) {
 }
 
 async function sendMessage (message) {
+  console.log({ 'data': { 'message': message }});
   const response = await post('/message-in', { 'data': { 'message': message }} )
   return response
 }

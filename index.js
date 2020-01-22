@@ -6,7 +6,7 @@ const commands = require('./commands')
 const gateway = require('./gateway_api')
 
 // # initialisation
-const token = '1008019346:AAHZ-PALIP0-TcCq5r90u3A5ekc1JvbdTy4'
+const token = process.env.TELEGRAM_TOKEN
 const app = express()
 const bot = new telegrambot(token, {polling: true})
 
@@ -16,15 +16,16 @@ app.use((req, res, next) => {
 })
 
 // # direct messages
-bot.on('message', (message) => {
-	if (commands.isCommand(message)) commands.handleCommands(bot, message)
-	else {
-    // send message to gateway
-    const response = gateway.sendMessage(message)
+bot.on('message', async (message) => {
+    if (commands.isCommand(message)) commands.handleCommands(bot, message)
+    else {
+        // send message to gateway
+        const response = await gateway.sendMessage(message)
+        console.debug(response)
 
-    // answer
-    bot.sendMessage(message.chat.id, 'Kia Ora!')
-  }
+        // todo: answer using `response.payload` or something
+        bot.sendMessage(message.chat.id, 'Kia Ora!')
+    }
 })
 
 // # callback queries

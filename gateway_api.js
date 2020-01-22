@@ -1,6 +1,6 @@
 const axios = require('axios')
 
-axios.defaults.baseURL = 'https://my-telegram-bot.beuthbot.now.sh/'
+axios.defaults.baseURL = process.env.GATEWAY_ENDPOINT
 
 async function post (collection, body) {
   console.log('sending to gateway');

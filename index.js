@@ -21,10 +21,8 @@ bot.on('message', async (message) => {
     else {
         // send message to gateway
         const response = await gateway.sendMessage(message)
-        console.debug(response)
-
-        // todo: answer using `response.payload` or something
-        bot.sendMessage(message.chat.id, 'Kia Ora!')
+	// and put back the answer
+        bot.sendMessage(message.chat.id, response.data.content)
     }
 })
 

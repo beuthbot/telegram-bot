@@ -5,7 +5,7 @@ axios.defaults.baseURL = process.env.GATEWAY_ENDPOINT
 async function post (collection, body) {
   console.log('sending to gateway');
   const response = await axios.post(collection, body)
-  console.log('gateway response');
+  console.log('got gateway response');
   return response
 }
 

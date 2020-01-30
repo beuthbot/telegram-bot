@@ -2,6 +2,7 @@ version: '3.7'
 services:
   telegram-bot:
     build: .
+    restart: unless-stopped
     environment:
       - GATEWAY_ENDPOINT
       - TELEGRAM_TOKEN

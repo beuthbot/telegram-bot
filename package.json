@@ -2,12 +2,12 @@
   "name": "telegram-bot",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "telegram-bot.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node telegram-bot.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "Lukas Danckwerth",
   "license": "ISC",
   "dependencies": {
     "axios": "^0.19.1",

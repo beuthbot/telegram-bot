@@ -89,7 +89,7 @@ function handleCommands (bot, message) {
 	}
 }
 
-function handleCallbackQuerys(bot, query) {
+function handleCallbackQuerys(bot, query2) {
 	const message = query.message
 	const data = JSON.parse(query.data)
 	const query = querys[data.command]
@@ -136,13 +136,14 @@ function renderHelpString (message) {
 
 function supportedMarkdown (message) {
 	let str =
-	`<b>bold</b> **bold**
+	`
+<b>bold</b> **bold**
 <i>italic</i> __italic__
 <code>monospace</code> \`monospace\`
 \`\`\`
 code block
-\`\`\``
-
+\`\`\`
+	`
 	return str
 }
 

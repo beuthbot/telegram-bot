@@ -52,7 +52,7 @@ The bot is basically a _Node_-_Express_-Backend. Incoming requests are checked a
 
 ## Structure
 
-The bot is separated into two files. `index.js` contains the fundamental logic. The bot get created with its token and waits for incoming events. For example an incoming message. The bot then calls a handler function.
+The bot is separated into two files. `telegram-bot.js` contains the fundamental logic. The bot get created with its token and waits for incoming events. For example an incoming message. The bot then calls a handler function.
 
 These handlers can be found in the second file, `commands.js`. This file contains the available commands as an Object. Furthermore does ist contain functions to determine if a message contains a commands and to answer the several requests a user can make.
 

@@ -8,17 +8,19 @@
  *  - Lukas Danckwerth
  */
 
-// === ------------------------------------------------------------------------------------------------------------ ===
+// === -------------------------------------------------------------------- ===
 //
 // Node.js Modules / Constants
-// === ------------------------------------------------------------------------------------------------------------ ===
+// === -------------------------------------------------------------------- ===
 
 const moment = require('moment')
+
+const util = require('util')
 
 const commands = {
 	'/start': {
 		answer: renderHelpString,
-		description: 'for quick prototyping',
+		description: 'For quick prototyping',
 		options: {
 			parse_mode: 'Markdown'
 		}
@@ -32,14 +34,14 @@ const commands = {
 	},
 	'/date': {
 		answer: getTimestamp,
-		description: 'Get the current timestamp in Zulu format',
+		description: 'Get the current date in Zulu format',
 		options: {
 			parse_mode: 'Markdown'
 		}
 	},
-	'/dateformated': {
+	'/dateformatted': {
 		answer: (message => 'What date format do you prefer?'),
-		description: 'Get the current timestamp in a choosable format',
+		description: 'Get the current date in a eligible format',
 		options: {
 			parse_mode: 'Markdown',
 			reply_markup: {
@@ -73,7 +75,7 @@ const commands = {
 	}
 }
 
-const callbackQuerys = {
+const callbackQueryCommands = {
 	'date': {
 		answer: getFormattedTimestamp,
 		options: {
@@ -83,10 +85,10 @@ const callbackQuerys = {
 }
 
 
-// === ------------------------------------------------------------------------------------------------------------ ===
+// === -------------------------------------------------------------------- ===
 //
 // Auxiliary Functions
-// === ------------------------------------------------------------------------------------------------------------ ===
+// === -------------------------------------------------------------------- ===
 
 /**
  * @param message The message with a text which is probably a telegram bot command.  A telegram bot command is a
@@ -145,12 +147,19 @@ function handleCommands (bot, message) {
  * @param bot
  * @param query2
  */
-function handleCallbackQuerys(bot, query2) {
-	const message = query.message
-	const data = JSON.parse(query.data)
-	const query = querys[data.command]
-	bot.sendMessage(message.chat.id, query.answer(message, data.payload), query.options)
-	bot.answerCallbackQuery(query.id)
+function handleCallbackQuery(bot, callbackQuery) {
+
+	const message = callbackQuery.message
+	const chatID = message.chat.id
+	const dataString = callbackQuery.data
+	const data = JSON.parse(dataString)
+	const commandName = data.command
+	const payload = data.payload
+	const command = callbackQueryCommands[commandName]
+	const answer = command.answer(message, payload)
+
+	bot.sendMessage(chatID, answer, command.options)
+	bot.answerCallbackQuery(callbackQuery.id)
 }
 
 /**
@@ -200,10 +209,11 @@ function getFormattedTimestamp (message, payload) {
 
 /**
  * @param message The message which requested the help message
- * @returns {string} A String containing a help message for the user listing the available commands
+ * @returns {string} A String containing a help message for the user listing
+ *                   the available commands
  */
 function renderHelpString (message) {
-	let str = 'Beneath you find the available commands. Try one out by simply clicking on it.\n\n'
+	let str = 'Beneath you find a list of the available commands. Try one out by simply clicking on it.\n\n'
 	for (let command of Object.keys(commands)) {
 		str += `- ${command} - ${commands[command].description}\n`
 	}
@@ -212,7 +222,8 @@ function renderHelpString (message) {
 
 /**
  * @param message The message which requested the supported markdowns
- * @returns {string} A String containing the information about the mark down language which can be used
+ * @returns {string} A String containing the information about the mark down
+ *                   language which can be used
  */
 function supportedMarkdown (message) {
 	return `
@@ -226,12 +237,12 @@ code block
 }
 
 
-// === ------------------------------------------------------------------------------------------------------------ ===
+// === -------------------------------------------------------------------- ===
 //
 // node exports
-// === ------------------------------------------------------------------------------------------------------------ ===
+// === -------------------------------------------------------------------- ===
 
 exports.isCommand = isCommand
 exports.handleCommands = handleCommands
-exports.handleCallbackQuerys = handleCallbackQuerys
+exports.handleCallbackQuery = handleCallbackQuery
 exports.handleInlineQuerys = handleInlineQuerys

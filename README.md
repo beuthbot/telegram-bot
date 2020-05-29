@@ -76,7 +76,7 @@ The bot is separated into two files. `telegram-bot.js` contains the fundamental 
 
 These handlers can be found in the second file, `commands.js`. This file contains the available commands as an Object. Furthermore does ist contain functions to determine if a message contains a commands and to answer the several requests a user can make.
 
-## Request Format
+
 
 ## Functionalities
 
@@ -87,6 +87,54 @@ The bot supports three different kinds of user requests:
 - **Message**: A user sends a message to the bot. We then check if the message contains a command. Commands are declared with a prefixed `/` in _Telegram_
 - **Callback Queries**: The bot can answer with a question, providing the user a simple interface, using a button matrix. When the user clicks on of these buttons we get a _callback query_.
 - **Inline Queries**: Users can call our bot from within another chat by prefixing the botname with an `@`. The user can then send a text to the bot, which results in an inline query. The result that the bot gives back is inserted in the chat, where the user called the bot from.
+
+## Message Format
+
+```json
+{
+  "message_id": 1234,
+  "from": {
+    "id": 123456789,
+    "is_bot": false,
+    "first_name": "Alan",
+    "username": "alantouring",
+    "language_code": "en"
+  },
+  "chat": {
+    "id": 123456789,
+    "first_name": "Alan",
+    "username": "alantouring",
+    "type": "private"
+  },
+  "date": 1590772873,
+  "text": "Wie wird das Wetter morgen?"
+}
+
+```
+
+## Callback Query Format
+
+```json
+{
+  "message_id": 1234,
+  "from": {
+    "id": 123456789,
+    "is_bot": false,
+    "first_name": "Alan",
+    "username": "alantouring",
+    "language_code": "en"
+  },
+  "chat": {
+    "id": 123456789,
+    "first_name": "Alan",
+    "username": "alantouring",
+    "type": "private"
+  },
+  "date": 1590772873,
+  "text": "Wie wird das Wetter morgen?"
+}
+
+```
 
 ### Commands
 
@@ -101,7 +149,7 @@ const commands = {
 			parse_mode: 'Markdown'
 		}
 	},
-  '/date': {
+  '/dateformatted': {
     answer: (message => 'What date format do you prefer?'),
     description: 'Get the current timestamp in a chooseable format',
     options: {

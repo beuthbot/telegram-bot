@@ -15,10 +15,11 @@ const axios = require('axios')
 axios.defaults.baseURL = process.env.GATEWAY_ENDPOINT || "http://localhost:3000"
 
 /**
- * Sends a `POST` to the BeuthBot Gateway API.  The given message is send as the body of the request.
+ * Sends a `POST` to the BeuthBot Gateway API.  The given message is send as
+ * the body of the request.
  *
- * @param message The message to send to the gateway.  in the `README.md` file is a description of how this message
- * should look like.
+ * @param message The message to send to the gateway.  in the `README.md` file
+ * is a description of how this message should look like.
  *
  * @returns {Promise<AxiosResponse<*>>}
  */

@@ -32,18 +32,38 @@ You will need a current version of [_node_ & _npm_](https://nodejs.org/en/).
 
 ### Cloning
 
-Get the source code by cloning its [repository](https://github.com/T0biWan/heftigwolf-bot).
+Get the source code by cloning its [repository](https://github.com/beuthbot/telegram-bot).
+
+```bash
+# clone with HTTPS
+$ git clone https://github.com/beuthbot/telegram-bot.git
+
+# clone with SSH
+$ git clone git@github.com:beuthbot/telegram-bot.git
+```
 
 ### Installing
 
+There are two ways running the telegram-bot either with npm or
+with docker-compose. For developing it's "easier" to use npm in
+production you should use docker-compose.
+
+#### Using `npm`
 After cloning the repository, install the dependencies. You can then run the project.
 
 ```bash
 # install dependencies
 npm install
 
-# serve at localhost:8000
+# serve at localhost8000
 npm start
+```
+
+#### Using `docker-compose`
+
+```bash
+# run service with docker-compose
+$ docker-compse up -d
 ```
 
 ## Overview
@@ -55,6 +75,8 @@ The bot is basically a _Node_-_Express_-Backend. Incoming requests are checked a
 The bot is separated into two files. `telegram-bot.js` contains the fundamental logic. The bot get created with its token and waits for incoming events. For example an incoming message. The bot then calls a handler function.
 
 These handlers can be found in the second file, `commands.js`. This file contains the available commands as an Object. Furthermore does ist contain functions to determine if a message contains a commands and to answer the several requests a user can make.
+
+## Request Format
 
 ## Functionalities
 
@@ -151,10 +173,11 @@ New commands can simply added to the `commands`-object but have to follow the pr
 
 ## Versioning
 
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/T0biWan/heftigwolf-bot/tags).
+We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/beuthbot/telegram-bot/tags).
 
 ## Authors
 
 - **Tobias Klatt** - _Initial work_ - [GitHub](https://github.com/T0biWan/)
+- **Lukas Danckwerth** - [GitHub](https://github.com/lukasdanckwerth/)
 
-See also the list of [contributors](https://github.com/T0biWan/heftigwolf-bot/graphs/contributors) who participated in this project.
+See also the list of [contributors](https://github.com/orgs/beuthbot/people) who participated in this project.

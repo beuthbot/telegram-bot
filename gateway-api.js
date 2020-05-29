@@ -1,3 +1,12 @@
+/**
+ * gateway-api.js
+ *
+ * summarizes the function of the BeuthBot's Gateway api.
+ *
+ * Contributed by:
+ *  - Tobias Klatt
+ *  - Lukas Danckwerth
+ */
 
 // use `axios` as HTTP client for requesting gateway API
 const axios = require('axios')

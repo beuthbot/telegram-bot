@@ -12,6 +12,8 @@ const commands = require('./commands')
 // import the gateway api
 const gateway = require('./gateway-api')
 
+const dotenv = require('dotenv').config()
+
 // receive telegram token from the `.env` file
 const token = process.env.TELEGRAM_TOKEN
 

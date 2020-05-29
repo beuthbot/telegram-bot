@@ -40,26 +40,9 @@ const dotenv = require('dotenv').config()
 // receive telegram token from the `.env` file
 const token = process.env.TELEGRAM_TOKEN
 
-// express application is used to serve a simple answer for a `GET` request.
-// LD: do we really need this?
-// const express = require('express')
-// const app = express()
-
 // create telegram bot which does the telegram stuff for us
 const bot = new telegrambot(token, {polling: true})
 
-
-// === -------------------------------------------------------------------- ===
-//
-// Express Application
-// @see: https://expressjs.com/de/guide/routing.html
-// === -------------------------------------------------------------------- ===
-
-// Repond simple hello text for `GET` requests
-// LD: do we really need this?
-// app.use((req, res, next) => {
-//     res.send('Hello from BeuthBot Telegram Bot')
-// })
 
 
 // === -------------------------------------------------------------------- ===
@@ -72,9 +55,7 @@ const bot = new telegrambot(token, {polling: true})
 bot.on('message', async (message) => {
 
     // print message for debugging purposes
-    var logContent = util.inspect(message, false, null, true)
-    // console.log("incoming callback query: " + logContent)
-    console.log("incoming message: " + logContent)
+    console.log("incoming message: " + message.text)
 
     // check for existing telegram bot command first and handle it if present
     if (commands.isCommand(message)) {
@@ -86,6 +67,7 @@ bot.on('message', async (message) => {
         // send message to gateway api and synchron wait for response
         const response = await gateway.postMessage(message)
 
+        // print response for debugging purposes
         console.log("incoming response: " + response)
 
 	    // tell telegram bot to send back the answer
@@ -96,9 +78,8 @@ bot.on('message', async (message) => {
 // handle incoming callback queries from telegram bot
 bot.on('callback_query', (query) => {
 
-    // print message for debugging purposes
-    // var logContent = util.inspect(query, false, null, true)
-    // console.log("incoming callback query: " + logContent)
+    // print query for debugging purposes
+    console.log("incoming callback query: " + query)
 
     commands.handleCallbackQuery(bot, query)
 })
@@ -106,7 +87,7 @@ bot.on('callback_query', (query) => {
 // handle incoming inline queries from telegram bot
 bot.on('inline_query', (query) => {
 
-    // print message for debugging purposes
+    // print query for debugging purposes
     console.log("incoming inline query: " + query)
 
     commands.handleInlineQuerys(bot, query)
@@ -117,7 +98,7 @@ bot.on("polling_error", (err) => {
     console.log(err)
 });
 
-// finally start the express application on port 8000
-// app.listen(8000)
+// print running message for debugging purposes
+console.log("running telegram-bot.js")
 
-console.log('running telegram bot')
+

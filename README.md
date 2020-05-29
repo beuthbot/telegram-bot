@@ -115,8 +115,9 @@ The bot supports three different kinds of user requests:
 ## Callback Query Format
 
 ```json
+
 {
-  "message_id": 1234,
+  "id": 123456789,
   "from": {
     "id": 123456789,
     "is_bot": false,
@@ -124,14 +125,39 @@ The bot supports three different kinds of user requests:
     "username": "alantouring",
     "language_code": "en"
   },
-  "chat": {
-    "id": 123456789,
-    "first_name": "Alan",
-    "username": "alantouring",
-    "type": "private"
+  "message": {
+    "message_id": 1234,
+    "from": {
+      "id": 123456790,
+      "is_bot": true,
+      "first_name": "BeuthBot",
+      "username": "BeuthBot"
+    },
+    "chat": {
+      "id": 123456789,
+      "first_name": "Alan",
+      "username": "alantouring",
+      "type": "private"
+    },
+    "date": 1590770150,
+    "text": "What date format do you prefer?",
+    "reply_markup": {
+      "inline_keyboard": [
+        [
+          {
+            "text": "Zulu",
+            "callback_data": "{\"command\":\"date\",\"payload\":\"zulu\"}"
+          },
+          {
+            "text": "German",
+            "callback_data": "{\"command\":\"date\",\"payload\":\"german\"}"
+          }
+        ]
+      ]
+    }
   },
-  "date": 1590772873,
-  "text": "Wie wird das Wetter morgen?"
+  "chat_instance": 2659655154445318541,
+  "data": "{\"command\":\"date\",\"payload\":\"zulu\"}"
 }
 
 ```
@@ -142,13 +168,13 @@ The `commands.js`-file contains an `commands`-object. Every entry of this object
 
 ```js
 const commands = {
-	'/help': {
-		answer: renderHelpString,
-		description: 'Get a helpful list of all available commands and functionalities',
-		options: {
-			parse_mode: 'Markdown'
-		}
-	},
+  '/help': {
+    answer: renderHelpString,
+    description: 'Get a helpful list of all available commands and functionalities',
+    options: {
+      parse_mode: 'Markdown'
+    }
+  },
   '/dateformatted': {
     answer: (message => 'What date format do you prefer?'),
     description: 'Get the current timestamp in a chooseable format',

@@ -15,35 +15,33 @@
 
 const moment = require('moment')
 
-const util = require('util')
-
 const commands = {
 	'/start': {
 		answer: renderHelpString,
-		description: 'For quick prototyping',
+		description: "Receive the BeuthBot's start message",
 		options: {
-			parse_mode: 'Markdown'
+			parse_mode: "Markdown"
 		}
 	},
 	'/help': {
 		answer: renderHelpString,
-		description: 'Get a helpful list of all available commands and functionalities',
+		description: "Get a helpful list of all available commands and functionalities",
 		options: {
-			parse_mode: 'Markdown'
+			parse_mode: "Markdown"
 		}
 	},
 	'/date': {
 		answer: getTimestamp,
-		description: 'Get the current date in Zulu format',
+		description: "Get the current date in Zulu format",
 		options: {
-			parse_mode: 'Markdown'
+			parse_mode: "Markdown"
 		}
 	},
 	'/dateformatted': {
 		answer: (message => 'What date format do you prefer?'),
-		description: 'Get the current date in a eligible format',
+		description: "Get the current date in a eligible format",
 		options: {
-			parse_mode: 'Markdown',
+			parse_mode: "Markdown",
 			reply_markup: {
 				inline_keyboard: [
 					[
@@ -68,7 +66,7 @@ const commands = {
 	},
 	'/md': {
 		answer: supportedMarkdown,
-		description: 'Get a list of telegram supported markdown markup',
+		description: "Get a list of telegram supported markdown markup",
 		options: {
 			parse_mode: 'HTML'
 		}
@@ -79,7 +77,7 @@ const callbackQueryCommands = {
 	'date': {
 		answer: getFormattedTimestamp,
 		options: {
-			parse_mode: 'Markdown'
+			parse_mode: "Markdown"
 		}
 	}
 }
@@ -91,9 +89,11 @@ const callbackQueryCommands = {
 // === -------------------------------------------------------------------- ===
 
 /**
- * @param message The message with a text which is probably a telegram bot command.  A telegram bot command is a
- * 			      string with a leading `/`.
- * @returns {boolean} Whether the text in the given message is a telegram bot command
+ * @param message The message with a text which is probably a telegram bot
+ *                command.  A telegram bot command is a string with a leading
+ *                `/`.
+ * @returns {boolean} Whether the text in the given message is a telegram bot
+ *                    command
  */
 function isCommand (message) {
 	if (!message.text) return false
@@ -101,7 +101,8 @@ function isCommand (message) {
 }
 
 /**
- * @param command The telegram bot command which may exist in the dictionary of commands
+ * @param command The telegram bot command which may exist in the dictionary of
+ *                commands
  * @returns {boolean} Whether the command exists in the dictionary of commands
  */
 function commandExists (command) {
@@ -109,7 +110,8 @@ function commandExists (command) {
 }
 
 /**
- * Uses a regular expression to find a telegram bot command in the given text of the given message.
+ * Uses a regular expression to find a telegram bot command in the given text
+ * of the given message.
  *
  * @param message The message with a text
  * @returns {string} The found telegram bot command (if any)
@@ -121,12 +123,6 @@ function getCommand (message) {
 	return results[0]
 }
 
-/**
- *
- *
- * @param bot
- * @param message
- */
 function handleCommands (bot, message) {
 	const command = getCommand(message)
 	const chatID = message.chat.id
@@ -136,19 +132,12 @@ function handleCommands (bot, message) {
 		bot.sendMessage(chatID, answer, options)
 	}
 	else {
-		const answer = "I could not find a matching command. Have a look at the `/help`-command:"
+		const answer = "There't no matching command. Send me `/help` to receive a list of available commands."
 		bot.sendMessage(chatID, answer)
-		bot.sendMessage(chatID, renderHelpString(message))
 	}
 }
 
-/**
- *
- * @param bot
- * @param query2
- */
 function handleCallbackQuery(bot, callbackQuery) {
-
 	const message = callbackQuery.message
 	const chatID = message.chat.id
 	const dataString = callbackQuery.data
@@ -157,16 +146,10 @@ function handleCallbackQuery(bot, callbackQuery) {
 	const payload = data.payload
 	const command = callbackQueryCommands[commandName]
 	const answer = command.answer(message, payload)
-
 	bot.sendMessage(chatID, answer, command.options)
 	bot.answerCallbackQuery(callbackQuery.id)
 }
 
-/**
- *
- * @param bot
- * @param query
- */
 function handleInlineQuerys(bot, query) {
 	// https://core.telegram.org/bots/api#inline-mode
 	// console.log('inline_query', query)
@@ -181,7 +164,7 @@ function handleInlineQuerys(bot, query) {
 			// Nach der Auswahl wird der text in den Chat geposted
 			{
 				type:'article', id: "1", title:"Titel 1", input_message_content: { message_text: "Text 1" }, url: 'test.com', description: 'description' },
-      // { type:'article', id: "2", title:"RESULT 4", reply_markup: {}, input_message_content: { message_text: "TEXT 2" }, url: 'test.com', description: 'description' }
+      // { type:'article', id: "2", title:"RESULT 4", reply_markup: {}, input_message_content: { message_text: "TEXT 2" }, url: 'test.com', description: "description' }
     ]
     bot.answerInlineQuery(query.id, results)
   }
@@ -221,6 +204,26 @@ function renderHelpString (message) {
 }
 
 /**
+ * @param message The message which requested the start message
+ * @returns {string} A String containing a friendly start message
+ */
+function renderStartString (message) {
+	var text = "Welcome"
+	if (message.from && message.from.first_name) {
+		text += " " + message.from.first_name
+	} else if (message.from && message.from.username) {
+		text += " " + message.from.username
+	}
+	text += ",\n"
+
+	let str = 'Beneath you find a list of the available commands. Try one out by simply clicking on it.\n\n'
+	for (let command of Object.keys(commands)) {
+		str += `- ${command} - ${commands[command].description}\n`
+	}
+	return str
+}
+
+/**
  * @param message The message which requested the supported markdowns
  * @returns {string} A String containing the information about the mark down
  *                   language which can be used
@@ -239,7 +242,7 @@ code block
 
 // === -------------------------------------------------------------------- ===
 //
-// node exports
+// exports
 // === -------------------------------------------------------------------- ===
 
 exports.isCommand = isCommand

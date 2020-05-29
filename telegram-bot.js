@@ -93,11 +93,6 @@ bot.on('inline_query', (query) => {
     commands.handleInlineQuerys(bot, query)
 })
 
-// listen to upcoming polling errors
-bot.on("polling_error", (err) => {
-    console.log(err)
-});
-
 // print running message for debugging purposes
 console.log("running telegram-bot.js")
 

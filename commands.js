@@ -215,7 +215,7 @@ function renderStartString (message) {
 		text += " " + message.from.username
 	}
 	text += "! "
-	text += "I am the BeuthBot. You can ask me question and i'll try to answer them. "
+	text += "I am the BeuthBot. Ask me question and i'll try to answer. "
 	text += "Send me /help to receive a list of available commands."
 
 	return text

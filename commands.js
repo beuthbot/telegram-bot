@@ -17,7 +17,7 @@ const moment = require('moment')
 
 const commands = {
 	'/start': {
-		answer: renderHelpString,
+		answer: renderStartString,
 		description: "Receive the BeuthBot's start message",
 		options: {
 			parse_mode: "Markdown"
@@ -132,7 +132,7 @@ function handleCommands (bot, message) {
 		bot.sendMessage(chatID, answer, options)
 	}
 	else {
-		const answer = "There't no matching command. Send me `/help` to receive a list of available commands."
+		const answer = "There't no matching command. Send me /help to receive a list of available commands."
 		bot.sendMessage(chatID, answer)
 	}
 }
@@ -214,13 +214,11 @@ function renderStartString (message) {
 	} else if (message.from && message.from.username) {
 		text += " " + message.from.username
 	}
-	text += ",\n"
+	text += "! "
+	text += "I am the BeuthBot. You can ask me question and i'll try to answer them. "
+	text += "Send me /help to receive a list of available commands."
 
-	let str = 'Beneath you find a list of the available commands. Try one out by simply clicking on it.\n\n'
-	for (let command of Object.keys(commands)) {
-		str += `- ${command} - ${commands[command].description}\n`
-	}
-	return str
+	return text
 }
 
 /**

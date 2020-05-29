@@ -1,13 +1,19 @@
 FROM node:11-alpine
 
+# create working directory
 RUN mkdir -p /usr/src/app
 
+# change into working directory
 WORKDIR /usr/src/app
 
-COPY package-lock.json package.json ./
+# copy files for npm
+COPY package.json package-lock.json ./
 
+# install packages from `package.json` with npm
 RUN npm install
 
-COPY . . 
+# copy file for the telegram bot
+COPY telegram-bot.js commands.js gateway-api.js ./
 
+# start running the node server
 CMD ["npm", "run", "start"]

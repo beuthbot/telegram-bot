@@ -53,10 +53,10 @@ After cloning the repository, install the dependencies. You can then run the pro
 
 ```bash
 # install dependencies
-npm install
+$ npm install
 
 # serve at localhost8000
-npm start
+$ npm start
 ```
 
 #### Using `docker-compose`
@@ -64,6 +64,22 @@ npm start
 ```bash
 # run service with docker-compose
 $ docker-compse up -d
+```
+
+#### Installing on (productive) Machine
+
+```bash
+# clone with HTTPS
+$ git clone https://github.com/beuthbot/telegram-bot.git
+
+# change into directory
+$ cd telegram-bot
+
+# edit environment file
+$ vim .env
+
+# start Telegram Bot
+$ docker-compose up -d
 ```
 
 ## Overview
@@ -75,8 +91,6 @@ The bot is basically a _Node_-_Express_-Backend. Incoming requests are checked a
 The bot is separated into two files. `telegram-bot.js` contains the fundamental logic. The bot get created with its token and waits for incoming events. For example an incoming message. The bot then calls a handler function.
 
 These handlers can be found in the second file, `commands.js`. This file contains the available commands as an Object. Furthermore does ist contain functions to determine if a message contains a commands and to answer the several requests a user can make.
-
-
 
 ## Functionalities
 

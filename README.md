@@ -126,6 +126,8 @@ The bot supports three different kinds of user requests:
 
 ```
 
+![message model](http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/beuthbot/telegram-bot/master/.documentation/uml/message.txt)
+
 ## Callback Query Format
 
 ```json

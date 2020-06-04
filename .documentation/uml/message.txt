@@ -1,0 +1,32 @@
+<uml>
+
+@startuml
+class Message {
+  message_id: Integer
+  from: User
+  chat: Chat
+  date: Long
+  text: String
+}
+
+class User {
+   id: Integer
+   is_bot: Boolean
+   first_name: String
+   username: String
+   language_code: String
+}
+
+class Chat {
+   id: Integer
+   first_name: String
+   username: String
+   type: String
+}
+
+Message *--- User
+Message *--- Chat
+
+@enduml
+
+</uml>

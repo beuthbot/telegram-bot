@@ -6,3 +6,7 @@ services:
     environment:
       - GATEWAY_ENDPOINT
       - TELEGRAM_TOKEN
+networks: 
+  default: 
+    external:
+      name: beuthbot_network

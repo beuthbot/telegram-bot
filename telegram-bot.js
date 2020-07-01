@@ -71,7 +71,7 @@ bot.on('message', async (message) => {
         console.log("incoming response: " + response)
 
 	    // tell telegram bot to send back the answer
-        bot.sendMessage(message.chat.id, response.data.answer.content)
+        bot.sendMessage(message.chat.id, response.data.answer.content, {parse_mode: "Markdown"})
     }
 })
 

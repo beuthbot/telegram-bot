@@ -26,8 +26,6 @@ process.env.NTBA_FIX_319 = 1;
 
 const telegrambot = require('node-telegram-bot-api')
 
-const util = require('util')
-
 // import telegram bot commands
 const commands = require('./commands')
 
@@ -54,9 +52,6 @@ const bot = new telegrambot(token, {polling: true})
 // handle incoming messages from telegram bot
 bot.on('message', async (message) => {
 
-    // print message for debugging purposes
-    console.log("incoming message: " + message.text)
-
     // check for existing telegram bot command first and handle it if present
     if (commands.isCommand(message)) {
         commands.handleCommands(bot, message)
@@ -64,14 +59,55 @@ bot.on('message', async (message) => {
 
     // if not send message to beuth bot gateway api
     else {
-        // send message to gateway api and synchron wait for response
-        const response = await gateway.postMessage(message)
 
-        // print response for debugging purposes
-        console.log("incoming response: " + response)
+        let beuthBotMessage = {}
+
+        if (message.from) {
+            beuthBotMessage.text = message.text
+        }
+
+        if (message.date) {
+            beuthBotMessage.clientDate = message.date
+        }
+
+        if (message.from) {
+            if (message.from.id) {
+                beuthBotMessage.telegramId = message.from.id
+            }
+            if (message.from.username) {
+                beuthBotMessage.nickname = message.from.username
+            }
+            if (message.from.first_name) {
+                beuthBotMessage.firstName = message.from.first_name
+            }
+            if (message.from.last_name) {
+                beuthBotMessage.lastname = message.from.last_name
+            }
+            if (message.from.language_code) {
+                beuthBotMessage.clientLanguage = message.from.language_code
+            }
+        }
+
+        // send message to gateway api and synchron wait for response
+        const response = await gateway.postMessage(beuthBotMessage)
+
+        if (!response.data) {
+            console.log("no response.data found")
+            return
+        }
+
+        if (!response.data.answer) {
+            console.log("no response.data.answer found")
+            return
+        }
+
+        if (!response.data.answer.content) {
+            console.log("no response.data.answer.content found")
+            return
+        }
 
 	    // tell telegram bot to send back the answer
-        bot.sendMessage(message.chat.id, response.data.answer.content, {parse_mode: "Markdown"})
+        bot.sendMessage(message.chat.id, response.data.answer.content, { parse_mode: "Markdown"} )
     }
 })
 

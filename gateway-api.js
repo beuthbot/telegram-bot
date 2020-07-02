@@ -14,31 +14,30 @@ const axios = require('axios')
 // set default URL of axios HTTP client.  fallback on local host for development
 axios.defaults.baseURL = process.env.GATEWAY_ENDPOINT || "http://localhost:3000"
 
+const util = require('util')
+
 /**
  * Sends a `POST` to the BeuthBot Gateway API.  The given message is send as
  * the body of the request.
  *
- * @param message The message to send to the gateway.  in the `README.md` file
+ * @param requestBody The message to send to the gateway.  in the `README.md` file
  * is a description of how this message should look like.
  *
  * @returns {Promise<AxiosResponse<*>>}
  */
-async function postMessage(message) {
+async function postMessage(requestBody) {
 
   // print function call for debugging purposes
-  console.log("post message: " + message + "\n");
-
-  // create request body which is send via the `POST` request
-  const requestBody = message
-
-  // print gateway URL for debugging purposes
-  console.log("sending to gateway: " + axios.defaults.baseURL)
+  console.debug("post message:\n" + util.inspect(requestBody, false, null, true) + "\n\n")
 
   // await response from gateway
   const response = await axios.post('/message', requestBody)
 
-  // print response for debugging purposes
-  console.log("got gateway response: " + response + "\n")
+  if (response.data) {
+    console.debug("gateway response:\n" + util.inspect(response.data, false, null, true) + "\n\n")
+  } else {
+    console.debug("no response.data")
+  }
 
   return response
 }

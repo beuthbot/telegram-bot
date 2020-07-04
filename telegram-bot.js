@@ -39,7 +39,7 @@ const dotenv = require('dotenv').config()
 const token = process.env.TELEGRAM_TOKEN
 
 // create telegram bot which does the telegram stuff for us
-const bot = new telegrambot(token, {polling: true})
+const bot = new telegrambot(token, { polling: true })
 
 
 
@@ -51,7 +51,6 @@ const bot = new telegrambot(token, {polling: true})
 
 // handle incoming messages from telegram bot
 bot.on('message', async (message) => {
-
     // check for existing telegram bot command first and handle it if present
     if (commands.isCommand(message)) {
         commands.handleCommands(bot, message)
@@ -59,7 +58,6 @@ bot.on('message', async (message) => {
 
     // if not send message to beuth bot gateway api
     else {
-
         let beuthBotMessage = {}
 
         if (message.from) {
@@ -106,8 +104,8 @@ bot.on('message', async (message) => {
             return
         }
 
-	    // tell telegram bot to send back the answer
-        bot.sendMessage(message.chat.id, response.data.answer.content, { parse_mode: "Markdown"} )
+        // tell telegram bot to send back the answer
+        bot.sendMessage(message.chat.id, response.data.answer.content, { parse_mode: "Markdown" })
     }
 })
 

@@ -79,7 +79,7 @@ bot.on('message', async (message) => {
                 beuthBotMessage.firstName = message.from.first_name
             }
             if (message.from.last_name) {
-                beuthBotMessage.lastname = message.from.last_name
+                beuthBotMessage.lastName = message.from.last_name
             }
             if (message.from.language_code) {
                 beuthBotMessage.clientLanguage = message.from.language_code

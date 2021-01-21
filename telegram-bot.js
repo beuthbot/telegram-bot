@@ -65,7 +65,7 @@ bot.on('message', async (message) => {
             text: message.text,
             clientLanguage: message.from ? message.from.language_code : undefined,
             lastName: message.from ? message.from.last_name : undefined,
-            telegramId: message.from ? message.from.id : undefined,
+            serviceUserId: message.from ? message.from.id : undefined,
             nickname: message.from ? message.from.username : undefined,
             firstName: message.from ? message.from.first_name : undefined,
         });
@@ -75,10 +75,10 @@ bot.on('message', async (message) => {
 
         if(botResponse && botResponse.answer && botResponse.answer.content){
             const responseMessage = botResponse.answer.content;
-            bot.sendMessage(responseMessage)
+            bot.sendMessage(message.chat.id, responseMessage, { parse_mode: "Markdown" })
         }
         else{
-            bot.sendMessage('ERROR cant connect to bot gateway')
+            bot.sendMessage(message.chat.id, 'ERROR cant connect to bot gateway', { parse_mode: "Markdown" })
         }
     }
 })

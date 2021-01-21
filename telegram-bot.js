@@ -23,20 +23,21 @@
 // See https://github.com/yagop/node-telegram-bot-api/issues/540
 process.env.NTBA_FIX_319 = 1;
 
+const {Gateway, BotRequest} = require('@bhtbot/bhtbot');
 
 const telegrambot = require('node-telegram-bot-api')
 
 // import telegram bot commands
 const commands = require('./commands')
 
-// import the gateway api
-const gateway = require('./gateway-api')
-
 // use `dotenv` to ready `.env` file even when not running with docker-compose
 const dotenv = require('dotenv').config()
 
 // receive telegram token from the `.env` file
 const token = process.env.TELEGRAM_TOKEN
+
+// create gateway connection
+const gateway = new Gateway(process.env.GATEWAY_ENDPOINT, 'telegram');
 
 // create telegram bot which does the telegram stuff for us
 const bot = new telegrambot(token, { polling: true })
@@ -58,54 +59,27 @@ bot.on('message', async (message) => {
 
     // if not send message to beuth bot gateway api
     else {
-        let beuthBotMessage = {}
 
-        if (message.from) {
-            beuthBotMessage.text = message.text
-        }
-
-        if (message.date) {
-            beuthBotMessage.clientDate = message.date
-        }
-
-        if (message.from) {
-            if (message.from.id) {
-                beuthBotMessage.telegramId = message.from.id
-            }
-            if (message.from.username) {
-                beuthBotMessage.nickname = message.from.username
-            }
-            if (message.from.first_name) {
-                beuthBotMessage.firstName = message.from.first_name
-            }
-            if (message.from.last_name) {
-                beuthBotMessage.lastName = message.from.last_name
-            }
-            if (message.from.language_code) {
-                beuthBotMessage.clientLanguage = message.from.language_code
-            }
-        }
+        const beuthBotMessage = new BotRequest({
+            clientDate: message.date,
+            text: message.text,
+            clientLanguage: message.from ? message.from.language_code : undefined,
+            lastName: message.from ? message.from.last_name : undefined,
+            telegramId: message.from ? message.from.id : undefined,
+            nickname: message.from ? message.from.username : undefined,
+            firstName: message.from ? message.from.first_name : undefined,
+        });
 
         // send message to gateway api and synchron wait for response
-        const response = await gateway.postMessage(beuthBotMessage)
+        const botResponse = await gateway.query(beuthBotMessage)
 
-        if (!response.data) {
-            console.log("no response.data found")
-            return
+        if(botResponse && botResponse.answer && botResponse.answer.content){
+            const responseMessage = botResponse.answer.content;
+            bot.sendMessage(responseMessage)
         }
-
-        if (!response.data.answer) {
-            console.log("no response.data.answer found")
-            return
+        else{
+            bot.sendMessage('ERROR cant connect to bot gateway')
         }
-
-        if (!response.data.answer.content) {
-            console.log("no response.data.answer.content found")
-            return
-        }
-
-        // tell telegram bot to send back the answer
-        bot.sendMessage(message.chat.id, response.data.answer.content, { parse_mode: "Markdown" })
     }
 })
 
@@ -128,6 +102,6 @@ bot.on('inline_query', (query) => {
 })
 
 // print running message for debugging purposes
-console.log("running telegram-bot.js")
+console.log("Telegram Bot is up and running")
 
 

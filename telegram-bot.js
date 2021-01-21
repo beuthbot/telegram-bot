@@ -65,7 +65,7 @@ bot.on('message', async (message) => {
             text: message.text,
             clientLanguage: message.from ? message.from.language_code : undefined,
             lastName: message.from ? message.from.last_name : undefined,
-            telegramId: message.from ? message.from.id : undefined,
+            serviceUserId: message.from ? message.from.id : undefined,
             nickname: message.from ? message.from.username : undefined,
             firstName: message.from ? message.from.first_name : undefined,
         });

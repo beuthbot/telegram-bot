@@ -75,10 +75,10 @@ bot.on('message', async (message) => {
 
         if(botResponse && botResponse.answer && botResponse.answer.content){
             const responseMessage = botResponse.answer.content;
-            bot.sendMessage(responseMessage)
+            bot.sendMessage(message.chat.id, responseMessage, { parse_mode: "Markdown" })
         }
         else{
-            bot.sendMessage('ERROR cant connect to bot gateway')
+            bot.sendMessage(message.chat.id, 'ERROR cant connect to bot gateway', { parse_mode: "Markdown" })
         }
     }
 })

@@ -50,6 +50,45 @@ const bot = new telegrambot(token, { polling: true })
 // @see: https://github.com/yagop/node-telegram-bot-api
 // === -------------------------------------------------------------------- ===
 
+async function handleVoice(chatId, {file_id, file_unique_id, file_size, mime_type, duration}) {
+    const file = await bot.getFileStream(file_id);
+    try{
+        const botResponse = await gateway.queryAudio(file, file_id + '.ogg', mime_type);
+        return respond(chatId, JSON.parse(botResponse))
+    }
+    catch (e) {
+        bot.sendMessage(chatId, "Problem: " + e.message);
+    }
+}
+
+async function handleMessage(message){
+
+    const beuthBotMessage = new BotRequest({
+        clientDate: message.date,
+        text: message.text,
+        clientLanguage: message.from ? message.from.language_code : undefined,
+        lastName: message.from ? message.from.last_name : undefined,
+        serviceUserId: message.from ? message.from.id : undefined,
+        nickname: message.from ? message.from.username : undefined,
+        firstName: message.from ? message.from.first_name : undefined,
+    });
+
+    // send message to gateway api and synchron wait for response
+    const botResponse = await gateway.query(beuthBotMessage)
+    return respond(message.chat.id, botResponse)
+}
+
+function respond(chatId, botResponse){
+    console.log('respond', chatId, botResponse)
+    if(botResponse && botResponse.answer && botResponse.answer.content){
+        const responseMessage = botResponse.answer.content;
+        bot.sendMessage(chatId, responseMessage, { parse_mode: "Markdown" })
+    }
+    else{
+        bot.sendMessage(chatId, 'ERROR cant connect to bot gateway', { parse_mode: "Markdown" })
+    }
+}
+
 // handle incoming messages from telegram bot
 bot.on('message', async (message) => {
     // check for existing telegram bot command first and handle it if present
@@ -57,29 +96,15 @@ bot.on('message', async (message) => {
         commands.handleCommands(bot, message)
     }
 
+    console.log('message', message)
+
+    if (message.voice) {
+        return handleVoice(message.chat.id, message.voice);
+    }
+
     // if not send message to beuth bot gateway api
     else {
-
-        const beuthBotMessage = new BotRequest({
-            clientDate: message.date,
-            text: message.text,
-            clientLanguage: message.from ? message.from.language_code : undefined,
-            lastName: message.from ? message.from.last_name : undefined,
-            serviceUserId: message.from ? message.from.id : undefined,
-            nickname: message.from ? message.from.username : undefined,
-            firstName: message.from ? message.from.first_name : undefined,
-        });
-
-        // send message to gateway api and synchron wait for response
-        const botResponse = await gateway.query(beuthBotMessage)
-
-        if(botResponse && botResponse.answer && botResponse.answer.content){
-            const responseMessage = botResponse.answer.content;
-            bot.sendMessage(message.chat.id, responseMessage, { parse_mode: "Markdown" })
-        }
-        else{
-            bot.sendMessage(message.chat.id, 'ERROR cant connect to bot gateway', { parse_mode: "Markdown" })
-        }
+        handleMessage(message);
     }
 })
 

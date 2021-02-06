@@ -24,6 +24,8 @@
 process.env.NTBA_FIX_319 = 1;
 
 const {Gateway, BotRequest} = require('@bhtbot/bhtbot');
+const {configureSocket} = require('./websocket');
+
 
 const telegrambot = require('node-telegram-bot-api')
 
@@ -42,7 +44,7 @@ const gateway = new Gateway(process.env.GATEWAY_ENDPOINT, 'telegram');
 // create telegram bot which does the telegram stuff for us
 const bot = new telegrambot(token, { polling: true })
 
-
+configureSocket(gateway, bot);
 
 // === -------------------------------------------------------------------- ===
 //

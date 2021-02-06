@@ -13,7 +13,7 @@ COPY package.json package-lock.json ./
 RUN npm install
 
 # copy file for the telegram bot
-COPY telegram-bot.js commands.js ./
+COPY telegram-bot.js websocket.js commands.js ./
 
 # start running the node server
 CMD ["npm", "run", "start"]

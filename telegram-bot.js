@@ -87,7 +87,12 @@ function respond(chatId, botResponse){
         bot.sendMessage(chatId, responseMessage, { parse_mode: "Markdown" })
     }
     else{
-        bot.sendMessage(chatId, 'ERROR cant connect to bot gateway', { parse_mode: "Markdown" })
+        if(botResponse && botResponse.error){
+            bot.sendMessage(chatId, botResponse.error, { parse_mode: "Markdown" })
+        }
+        else{
+            bot.sendMessage(chatId, 'Unknown Error, probably cant connect to bot gateway', { parse_mode: "Markdown" })
+        }
     }
 }
 

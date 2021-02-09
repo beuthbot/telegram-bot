@@ -13,7 +13,7 @@ async function configureSocket(gateway, bot) {
           filename: 'audioResponse',
           contentType: 'audio/mpeg',
         };
-        await bot.sendVoice(file.userId, buffer);
+        await bot.sendVoice(file.userId, buffer, {}, fileOptions);
     })
 }
 

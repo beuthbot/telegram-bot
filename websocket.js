@@ -9,7 +9,7 @@ async function configureSocket(gateway, bot) {
     sock.onFile(async file=>{
         console.log('send file from socket', file.userId, file.fileName);
         const buffer = Buffer.from(file.binary);
-        await bot.sendAudio(file.userId, buffer);
+        await bot.sendVoice(file.userId, buffer);
     })
 }
 

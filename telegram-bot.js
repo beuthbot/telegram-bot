@@ -23,7 +23,7 @@
 // See https://github.com/yagop/node-telegram-bot-api/issues/540
 process.env.NTBA_FIX_319 = 1;
 
-const {Gateway, BotRequest} = require('@bhtbot/bhtbot');
+const {Gateway, BotRequest, BotRequestPayload, FileRequest, FileRequestPayload} = require('@bhtbot/bhtbot');
 const {configureSocket} = require('./websocket');
 
 
@@ -52,10 +52,10 @@ configureSocket(gateway, bot);
 // @see: https://github.com/yagop/node-telegram-bot-api
 // === -------------------------------------------------------------------- ===
 
-async function handleVoice(chatId, {file_id, file_unique_id, file_size, mime_type, duration}) {
+async function handleVoice(message, chatId, {file_id, file_unique_id, file_size, mime_type, duration}) {
     const file = await bot.getFileStream(file_id);
     try{
-        const botResponse = await gateway.queryAudio(file, file_id + '.ogg', mime_type);
+        const botResponse = await gateway.queryAudio(new FileRequest(file, file_id + '.ogg', mime_type, messageToPayload(message)));
         return respond(chatId, JSON.parse(botResponse))
     }
     catch (e) {
@@ -63,9 +63,8 @@ async function handleVoice(chatId, {file_id, file_unique_id, file_size, mime_typ
     }
 }
 
-async function handleMessage(message){
-
-    const beuthBotMessage = new BotRequest({
+function messageToPayload(message){
+    return {
         clientDate: message.date,
         text: message.text,
         clientLanguage: message.from ? message.from.language_code : undefined,
@@ -73,8 +72,12 @@ async function handleMessage(message){
         serviceUserId: message.from ? message.from.id : undefined,
         nickname: message.from ? message.from.username : undefined,
         firstName: message.from ? message.from.first_name : undefined,
-    });
+    }
+}
 
+async function handleMessage(message){
+
+    const beuthBotMessage = new BotRequest(message);
     // send message to gateway api and synchron wait for response
     const botResponse = await gateway.query(beuthBotMessage)
     return respond(message.chat.id, botResponse)
@@ -106,7 +109,7 @@ bot.on('message', async (message) => {
     console.log('message', message)
 
     if (message.voice) {
-        return handleVoice(message.chat.id, message.voice);
+        return handleVoice(message, message.chat.id, message.voice);
     }
 
     // if not send message to beuth bot gateway api

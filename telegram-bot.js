@@ -77,7 +77,7 @@ function messageToPayload(message){
 
 async function handleMessage(message){
 
-    const beuthBotMessage = new BotRequest(message);
+    const beuthBotMessage = new BotRequest(messageToPayload(message));
     // send message to gateway api and synchron wait for response
     const botResponse = await gateway.query(beuthBotMessage)
     return respond(message.chat.id, botResponse)
